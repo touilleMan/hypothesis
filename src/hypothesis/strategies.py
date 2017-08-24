@@ -51,7 +51,7 @@ __all__ = [
     'dictionaries', 'fixed_dictionaries',
     'sampled_from', 'permutations',
     'datetimes', 'dates', 'times', 'timedeltas',
-    'builds',
+    'builds', 'composes',
     'randoms', 'random_module',
     'recursive', 'composite',
     'shared', 'runner', 'data',
@@ -878,6 +878,27 @@ def builds(target, *args, **kwargs):
     )
 
 
+@defines_strategy
+def composes(target, *args, **kwargs):
+    """Generates values by drawing from ``args`` and ``kwargs`` and passing
+    them to ``target`` in the appropriate argument position, then drawing from
+    the resulting strategy.
+
+    This is useful for combining strategy functions. e.g. if you had some
+    ``sized_strategy`` function then
+    ``composes(sized_strategy, size=integers(0, 10))`` would draw a size
+    between zero and ten, create a strategy by passing that size as an argument
+    to ``sized_strategy``, and then draw an example from that strategy.
+
+    If ``target`` has type annotations, they will be used to infer a strategy
+    for required arguments that were not passed to composes.  You can also tell
+    composes to infer a strategy for an optional argument by passing the
+    special value :const:`hypothesis.infer` as a keyword argument to
+    composes, instead of a strategy for that argument to ``target``.
+    """
+    return builds(target, *args, **kwargs).flatmap(lambda x: x)
+
+
 def delay_error(func):
     """A decorator to make exceptions lazy but success immediate.
 
@@ -1396,12 +1417,8 @@ def composite(f):
     @define_function_signature(f.__name__, f.__doc__, new_argspec)
     def accept(*args, **kwargs):
         class CompositeStrategy(SearchStrategy):
-
             def do_draw(self, data):
-                first_draw = [True]
-
                 def draw(strategy):
-                    first_draw[0] = False
                     return data.draw(strategy)
 
                 return f(draw, *args, **kwargs)
