@@ -26,44 +26,52 @@ env:
         - BUILD_RUNTIMES=$HOME/.runtimes
         - FORMAT_ALL=true
 
-    matrix:
+jobs:
+    include:
         # Core tests that we want to run first.
-        - TASK=check-pyup-yml
-        - TASK=check-release-file
-        - TASK=check-shellcheck
-        - TASK=documentation
-        - TASK=lint
-        - TASK=check-rst
-        - TASK=check-format
-        - TASK=check-benchmark
-        - TASK=check-coverage
-        - TASK=check-requirements
-        - TASK=check-pypy
-        - TASK=check-py27
-        - TASK=check-py36
-        - TASK=check-quality
+        - env: TASK=check-pyup-yml
+        - env: TASK=check-release-file
+        - env: TASK=check-shellcheck
+        - env: TASK=documentation
+        - env: TASK=lint
+        - env: TASK=check-rst
+        - env: TASK=check-format
+        - env: TASK=check-benchmark
+        - env: TASK=check-coverage
+        - env: TASK=check-requirements
+        - env: TASK=check-pypy
+        - env: TASK=check-py27
+        - env: TASK=check-py36
+        - env: TASK=check-quality
 
         # Less important tests that will probably
         # pass whenever the above do but are still
         # worth testing.
-        - TASK=check-unicode
-        - TASK=check-ancient-pip
-        - TASK=check-pure-tracer
-        - TASK=check-py273
-        - TASK=check-py27-typing
-        - TASK=check-py34
-        - TASK=check-py35
-        - TASK=check-nose
-        - TASK=check-pytest28
-        - TASK=check-faker070
-        - TASK=check-faker071
-        - TASK=check-django18
-        - TASK=check-django110
-        - TASK=check-django111
-        - TASK=check-pandas18
-        - TASK=check-pandas19
-        - TASK=check-pandas20
-        - TASK=deploy
+        - env: TASK=check-unicode
+        - env: TASK=check-ancient-pip
+        - env: TASK=check-pure-tracer
+        - env: TASK=check-py273
+        - env: TASK=check-py27-typing
+        - env: TASK=check-py34
+        - env: TASK=check-py35
+        - env: TASK=check-nose
+        - env: TASK=check-pytest28
+        - env: TASK=check-faker070
+        - env: TASK=check-faker071
+        - env: TASK=check-django18
+        - env: TASK=check-django110
+        - env: TASK=check-django111
+        - env: TASK=check-pandas18
+        - env: TASK=check-pandas19
+        - env: TASK=check-pandas20
+
+        - env: TASK=deploy
+          stage: deploy
+
+stages:
+    - test
+    - name: deploy
+      if: type = push
 
 script:
     - make $TASK
