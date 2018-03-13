@@ -188,6 +188,12 @@ def test_load_non_existent_profile():
         settings.get_profile('nonsense')
 
 
+def test_get_nonstring_profile_error():
+    with pytest.raises(InvalidArgument) as err:
+        settings.load_profile(3)
+    assert str(err.value) == 'name=3 must be a string'
+
+
 @pytest.mark.skipif(
     os.getenv('HYPOTHESIS_PROFILE') not in (None, 'default'),
     reason='Defaults have been overridden')

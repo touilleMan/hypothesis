@@ -316,7 +316,7 @@ class settings(settingsMeta('settings', (object,), {})):
     def get_profile(name):
         """Return the profile with the given name."""
         if not isinstance(name, (str, text_type)):
-            note_deprecation('name=%r must be a string' % (name,))
+            raise InvalidArgument('name=%r must be a string' % (name,))
         try:
             return settings._profiles[name]
         except KeyError:
