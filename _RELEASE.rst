@@ -29,3 +29,7 @@ Other changes in Hypothesis 4
 - :func:`~hypothesis.strategies.dates`, :func:`~hypothesis.strategies.times`,
   and :func:`~hypothesis.strategies.datetimes` now *only* accept ``min_value``
   and ``max_value`` as bounding arguments.
+
+- :func:`~hypothesis.settings.load_profile` and
+  :func:`~hypothesis.settings.register_profile` now error if passed a profile
+  name which is anything except a string.
