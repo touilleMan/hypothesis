@@ -18,7 +18,7 @@
 from __future__ import division, print_function, absolute_import
 
 import os
-import glob
+from glob import glob
 
 import pytest
 
@@ -32,8 +32,8 @@ PYTHON_DOCS = os.path.join(tools.HYPOTHESIS_PYTHON, '*.rst')
 
 def test_covers_all_rst_files():
     all_rst = {
-        f for f in tools.all_files() if f.endswith('.rst')
-        and os.path.basename(f) != 'RELEASE.rst'
+        f for f in tools.all_files() if f.endswith('.rst') and
+        os.path.basename(f) != 'RELEASE.rst'
     }
     assert set(ROOT_RST + GUIDES + PYTHON_DOCS) == all_rst
 
