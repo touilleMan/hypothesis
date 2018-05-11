@@ -492,7 +492,7 @@ def check_unicode():
 
 
 @task
-def check_whole_repo():
+def check_whole_repo_tests():
     subprocess.check_call([
         sys.executable, '-m', 'pytest', tools.REPO_TESTS
     ])
