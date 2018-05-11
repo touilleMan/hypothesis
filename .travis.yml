@@ -32,7 +32,6 @@ env:
         - TASK=documentation
         - TASK=lint
         - TASK=doctest
-        - TASK=check-rst
         - TASK=check-format
         - TASK=check-type-hints
         - TASK=check-coverage
