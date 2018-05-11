@@ -26,9 +26,6 @@ from glob import glob
 from time import time, sleep
 from datetime import datetime
 
-import yaml
-from pyup.config import Config
-
 import hypothesistooling as tools
 import hypothesistooling.installers as install
 from hypothesistooling import fix_doctests as fd
@@ -55,18 +52,6 @@ def lint():
 @task
 def check_type_hints():
     pip_tool('mypy', tools.PYTHON_SRC)
-
-
-@task
-def check_pyup_yml():
-    with open(tools.PYUP_FILE, 'r') as i:
-        data = yaml.safe_load(i.read())
-    config = Config()
-    config.update_config(data)
-
-    if not config.is_valid_schedule():
-        print('Schedule %r is invalid' % (config.schedule,))
-        sys.exit(1)
 
 
 DIST = os.path.join(tools.HYPOTHESIS_PYTHON, 'dist')
@@ -187,27 +172,6 @@ def deploy():
     ])
 
     sys.exit(0)
-
-
-@task
-def check_release_file():
-    if tools.has_source_changes():
-        if not tools.has_release():
-            print(
-                'There are source changes but no RELEASE.rst. Please create '
-                'one to describe your changes.'
-            )
-            sys.exit(1)
-        tools.parse_release_file()
-
-
-@task
-def check_shellcheck():
-    install.ensure_shellcheck()
-    subprocess.check_call([install.SHELLCHECK] + [
-        f for f in tools.all_files()
-        if f.endswith('.sh')
-    ])
 
 
 @task
@@ -525,6 +489,13 @@ def check_examples2():
 @task
 def check_unicode():
     run_tox('unicode', PY27)
+
+
+@task
+def check_whole_repo():
+    subprocess.check_call([
+        sys.executable, '-m', 'pytest', tools.REPO_TESTS
+    ])
 
 
 if __name__ == '__main__':

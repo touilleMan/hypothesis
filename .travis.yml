@@ -28,10 +28,7 @@ env:
 
     matrix:
         # Core tests that we want to run first.
-        - TASK=check-pyup-yml
-        - TASK=check-release-file
-        - TASK=check-shellcheck
-        - TASK=check-secrets
+        - TASK=check-whole-repo-tests
         - TASK=documentation
         - TASK=lint
         - TASK=doctest
